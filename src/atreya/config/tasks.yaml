@@ -1,0 +1,77 @@
+spec_task:
+  description: >
+    The coding task is:
+
+    {task}
+
+    Run id: {run_id}
+
+    Produce the engineering spec for a FastAPI backend and a single-page
+    HTML/JS frontend. Include only what this task needs. The file plan must
+    use paths relative to the run directory, including backend/main.py,
+    backend/models.py, backend/requirements.txt, frontend/index.html,
+    frontend/styles.css, frontend/app.js, tests/test_api.py, and QA_REPORT.md.
+  expected_output: >
+    A structured spec with summary, API endpoints, data models, UI pages,
+    acceptance criteria, and the file list.
+  agent: tech_lead
+
+backend_task:
+  description: >
+    Implement the tech lead's spec as a FastAPI application. Use the spec
+    from the previous task. Do not add endpoints that are absent from the spec.
+
+    Run id: {run_id}
+
+    Use save_project_file with paths relative to the run directory:
+    - backend/main.py
+    - backend/models.py
+    - backend/requirements.txt
+
+    The app must use an in-memory store, enable CORS for the frontend, and
+    expose the FastAPI app as the name `app` in backend/main.py.
+    Use read_project_file if you need to check a file you already wrote.
+  expected_output: >
+    Confirmation of the backend files written and a short description of each
+    endpoint implemented.
+  agent: backend_engineer
+
+frontend_task:
+  description: >
+    Build the single UI page described in the spec. It must call the backend
+    endpoints from the spec and from the backend task.
+
+    Run id: {run_id}
+
+    Read backend/main.py with read_project_file before writing the page.
+    Use save_project_file to save:
+    - frontend/index.html
+    - frontend/styles.css
+    - frontend/app.js
+
+    Point the page at http://127.0.0.1:8000. Do not call endpoints that are
+    not in the spec.
+  expected_output: >
+    Confirmation of the frontend files written and which endpoints the page calls.
+  agent: frontend_engineer
+
+qa_task:
+  description: >
+    Review the spec, backend, and frontend. Write pytest tests for the API
+    and a QA report.
+
+    Run id: {run_id}
+
+    Read the spec, backend, and frontend files with read_project_file.
+    SPEC.md is the tech lead's spec. Use save_project_file to save:
+    - tests/test_api.py
+    - QA_REPORT.md
+
+    tests/test_api.py must import the FastAPI app with
+    `from backend.main import app` and call it through fastapi.testclient.TestClient.
+    Assume pytest is run from the run directory with backend on the path.
+    The report must list every acceptance criterion from the spec and mark it
+    pass, fail, or not checked, with a one-line reason.
+  expected_output: >
+    The list of test cases added and the full QA report.
+  agent: qa_engineer

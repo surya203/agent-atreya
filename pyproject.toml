@@ -1,0 +1,20 @@
+[project]
+name = "atreya"
+version = "0.1.0"
+description = "Sequential CrewAI crew that turns a coding task into a small full-stack project."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "crewai>=1.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+atreya = ["config/*.yaml"]
